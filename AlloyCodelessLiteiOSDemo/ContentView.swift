@@ -31,7 +31,10 @@ struct ContentView: View {
                 Button {
                     Task {
                         let alloySettings = AlloySettings(
-                            apiKey: "a3cbb53c-8fae-409c-9ee1-35bb60bd6107",
+                            // *** this key is part of a working example ***
+                            // You should obtain your key from the alloy dashboard
+                            // On settings > SDK Config
+                            apiKey: "7db38092-3df1-4e56-8d01-3a92478485ba", 
                             production: true,
                             realProduction: false,
                             codelessFinalValidation: false
@@ -63,24 +66,20 @@ struct ContentView: View {
                     Task {
                         if !resumeJourney {
                             resumeJourney.toggle()
-                            
-                            let entityDataPerson = Entity.EntityData(nameFirst: "Mary", nameLast: "Vouched")
+                            // We are creating 2 entities for the journey application using only first and last name.
+                            // The Entity data needed will vary depending on the services associated to your workflows.
+                            let entityDataPerson = Entity.EntityData(nameFirst: "John", nameLast: "Doe")
+                            let entityDataPerson2 = Entity.EntityData(nameFirst: "Julie", nameLast: "Tam")
+                            // We add the entity data to an entity structure. Entity type can be person or business
+                            // The branch name needs to match the branch names on your journey.
+                            // If you only have one branch, you don't need to pass a branch name.
                             let entityPerson = Entity(entityData: entityDataPerson, entityType: "person", branchName: "vouched")
-                            
-                            let entityDataPerson2 = Entity.EntityData(nameFirst: "Katelyn", nameLast: "Veriff")
-                            let entityPerson2 = Entity(entityData: entityDataPerson2, entityType: "person", branchName: "veriff")
-                        
-                            let entityDataPerson3 = Entity.EntityData(nameFirst: "Radhika", nameLast: "Socure")
-                            let entityPerson3 = Entity(entityData: entityDataPerson3, entityType: "person", branchName: "socure")
-                        
-                            let entityDataPerson4 = Entity.EntityData(nameFirst: "Erik", nameLast: "Persona")
-                            let entityPerson4 = Entity(entityData: entityDataPerson4, entityType: "person", branchName: "persona")
-                            
-                            let entityDataPerson5 = Entity.EntityData(nameFirst: "Philip", nameLast: "Sumsub")
-                            let entityPerson5 = Entity(entityData: entityDataPerson5, entityType: "person", branchName: "sumsub")
+                            let entityPerson2 = Entity(entityData: entityDataPerson2, entityType: "person", branchName: "vouched")
+                            let entities = EntityData(entities: [entityPerson, entityPerson2], additionalEntities: false)
 
-                            let entities = EntityData(entities: [entityPerson, entityPerson2, entityPerson3, entityPerson4, entityPerson5], additionalEntities: false)
-                            let journeySettings = JourneySettings(journeyToken: "J-72ADYuJif7FOiDsYZoRE", entities: entities)
+                            // *** this key is part of a working example ***
+                            // You should obtain your journey token from the journey's list
+                            let journeySettings = JourneySettings(journeyToken: "J-UMEhLDP3p759425pz1uP", entities: entities)
                             let journeyResult = try await AlloyCodelessLiteiOS.shared.startJourney(journeySettings: journeySettings, onFinish: { _ in
                                 showResultJourney.toggle()
                             })
