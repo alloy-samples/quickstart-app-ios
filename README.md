@@ -18,6 +18,29 @@ Replace the values key, journey token, and journey data with the proper values r
 
 # Usage
 Once everything is working, change production to true before releasing your application.
+## Production vs Sandbox
+Whether using production or sandbox, `production` and `realProduction` should be true. 
+To change between sandbox and production you will want to change the production boolean in JourneySettings 
+## SDK settings
+Use the AlloySettings function to establish your SDK settings.
+```
+                AlloySettings(
+                            apiKey: “Your-API-Key”,
+                            production: true,
+                            realProduction: true,
+                            codelessFinalValidation: false
+                            )
+                        
+```
+
+apiKey should be the SDK key from your Alloy dashboard. 
+
+## Journey Settings
+The JourneySettings function is used to establish if this is production and which journey in Alloy you are using. In this step you will also include all entities you want Alloy to process. 
+
+```let journeySettings = JourneySettings(journeyToken: “J-XXXX-Token”, entities: entities, production:false)```
+
+The journeyToken can be retrieved from your Alloy dashboard, the entities will contain an array of entities to be processed by Alloy. 
 
 # Dependencies
 [Alloy Codeless Lite iOS](https://github.com/UseAlloy/alloy-codeless-lite-ios)
