@@ -1,5 +1,12 @@
 //
 //  ContentView.swift
+//  sdk_demo
+//
+//  Created by Austin on 11/30/23.
+//
+
+//
+//  ContentView.swift
 //  AlloyCodelessLiteiOSDemo
 //
 
@@ -31,19 +38,17 @@ struct ContentView: View {
                 Button {
                     Task {
                         let alloySettings = AlloySettings(
-                            // *** this key is part of a working example ***
-                            // You should obtain your key from the alloy dashboard
-                            // On settings > SDK Config
-                            apiKey: "7db38092-3df1-4e56-8d01-3a92478485ba", 
+                            apiKey: "Your-API-Key",
                             production: true,
-                            realProduction: false,
+                            realProduction: true,
                             codelessFinalValidation: false
                         )
 
                         let authInitResult: AuthInitResult = try await AlloyCodelessLiteiOS.shared.authInit(alloySettings: alloySettings)
                         if authInitResult.resultCode == AuthInitResultErrorCode.RESULT_ERROR {
                             textResul = "Result SDK init: \(authInitResult.resultMessage)"
-                            print("Init SDK ERROR: \(authInitResult.resultMessage)")
+                            //print("Init SDK ERROR: \(authInitResult.resultMessage)")
+                            print(authInitResult)
                         } else {
                             startAlloy.toggle()
                             print("Init SDK OK: \(authInitResult)")
@@ -53,7 +58,7 @@ struct ContentView: View {
                     HStack() {
                         Image(systemName: "play.circle")
                             .padding(.leading, 16)
-                        Text("Start Alloy")
+                        Text("Initialize SDK")
                             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 64, alignment: .leading)
                     }
                 }
@@ -66,20 +71,15 @@ struct ContentView: View {
                     Task {
                         if !resumeJourney {
                             resumeJourney.toggle()
-                            // We are creating 2 entities for the journey application using only first and last name.
-                            // The Entity data needed will vary depending on the services associated to your workflows.
+                            // First we create an entities details
                             let entityDataPerson = Entity.EntityData(nameFirst: "John", nameLast: "Doe")
-                            let entityDataPerson2 = Entity.EntityData(nameFirst: "Julie", nameLast: "Tam")
-                            // We add the entity data to an entity structure. Entity type can be person or business
-                            // The branch name needs to match the branch names on your journey.
-                            // If you only have one branch, you don't need to pass a branch name.
-                            let entityPerson = Entity(entityData: entityDataPerson, entityType: "person", branchName: "vouched")
-                            let entityPerson2 = Entity(entityData: entityDataPerson2, entityType: "person", branchName: "vouched")
-                            let entities = EntityData(entities: [entityPerson, entityPerson2], additionalEntities: false)
-
-                            // *** this key is part of a working example ***
-                            // You should obtain your journey token from the journey's list
-                            let journeySettings = JourneySettings(journeyToken: "J-UMEhLDP3p759425pz1uP", entities: entities)
+                            // Now we add those details to the entity, and specify the branch name of the journey
+                            let entityPerson = Entity(entityData: entityDataPerson, entityType: "person", branchName: "upload")
+                            // Add the entity to the entities array
+                            let entities = EntityData(entities: [entityPerson], additionalEntities: false)
+                            // Include your journey token in this step and make sure production is false if in sandbox
+                            let journeySettings = JourneySettings(journeyToken: "J-XXXX-Token", entities: entities, production:false)
+                            //Finally make the call
                             let journeyResult = try await AlloyCodelessLiteiOS.shared.startJourney(journeySettings: journeySettings, onFinish: { _ in
                                 showResultJourney.toggle()
                             })
@@ -105,7 +105,7 @@ struct ContentView: View {
                         Image(systemName: "point.3.connected.trianglepath.dotted")
                             .padding(.leading, 16)
                             .tint( startAlloy ? .black : .white)
-                        Text(resumeJourney ? "Resume Journey" : "Start Journey")
+                        Text("Open SDK")
                             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 64, alignment: .leading)
                     }
                 }
