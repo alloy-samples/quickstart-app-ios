@@ -30,14 +30,32 @@ struct ContentView: View {
             VStack (spacing: 24) {
                 Button {
                     Task {
+
+
+
+                        let theme = CustomTheme(
+                            primaryColor: "#0000FF",
+                            backgroundColor: "#000000",
+                            textColor: "#FFFFFF"
+                        )
+
                         let alloySettings = AlloySettings(
                             // *** this key is part of a working example ***
                             // You should obtain your key from the alloy dashboard
                             // On settings > SDK Config
-                            apiKey: "7db38092-3df1-4e56-8d01-3a92478485ba", 
-                            production: true,
-                            realProduction: false,
-                            codelessFinalValidation: false
+                            apiKey: "679663b8-d73a-423b-80e9-3ac8ec698c3c",
+                            production: false,
+                            realProduction: true,
+                            codelessFinalValidation: false,
+                            showHeader: false,
+                            showDebugInfo: true,
+                            journeyToken: "J-72ADYuJif7FOiDsYZoRE",
+                            journeyApplicationToken: "JA-pY7VpIPaWddItw2QfIpp",
+                            appUrl: "https://corekube-dev-alloysdk.app.alloy.com",
+                            apiUrl: "https://corekube-dev-alloysdk.api.alloy.com",
+                            entityToken: "P-99ipW7Xtx88RdxfN2Rpr",
+                            isSingleEntity: true,
+                            customTheme: theme
                         )
 
                         let authInitResult: AuthInitResult = try await AlloyCodelessLiteiOS.shared.authInit(alloySettings: alloySettings)
@@ -66,21 +84,15 @@ struct ContentView: View {
                     Task {
                         if !resumeJourney {
                             resumeJourney.toggle()
-                            // We are creating 2 entities for the journey application using only first and last name.
-                            // The Entity data needed will vary depending on the services associated to your workflows.
-                            let entityDataPerson = Entity.EntityData(nameFirst: "John", nameLast: "Doe")
-                            let entityDataPerson2 = Entity.EntityData(nameFirst: "Julie", nameLast: "Tam")
-                            // We add the entity data to an entity structure. Entity type can be person or business
-                            // The branch name needs to match the branch names on your journey.
-                            // If you only have one branch, you don't need to pass a branch name.
-                            let entityPerson = Entity(entityData: entityDataPerson, entityType: "person", branchName: "vouched")
-                            let entityPerson2 = Entity(entityData: entityDataPerson2, entityType: "person", branchName: "vouched")
-                            let entities = EntityData(entities: [entityPerson, entityPerson2], additionalEntities: false)
 
-                            // *** this key is part of a working example ***
-                            // You should obtain your journey token from the journey's list
-                            let journeySettings = JourneySettings(journeyToken: "J-UMEhLDP3p759425pz1uP", entities: entities)
-                            let journeyResult = try await AlloyCodelessLiteiOS.shared.startJourney(journeySettings: journeySettings, onFinish: { _ in
+                            let journeySettings = JourneySettings(
+                                journeyToken: "J-72ADYuJif7FOiDsYZoRE",
+                                journeyApplicationToken: "JA-pY7VpIPaWddItw2QfIpp",
+                                production: false,
+                                showDebugInfo: true
+                            )
+                            let journeyResult = try await AlloyCodelessLiteiOS.shared.startJourney(journeySettings: journeySettings, onFinish: { data in
+                                print("Journey status: \(data?.finishResultMessage ?? "")")
                                 showResultJourney.toggle()
                             })
                             if let resultJourney = journeyResult?.journeyResultData {
@@ -137,3 +149,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+    
